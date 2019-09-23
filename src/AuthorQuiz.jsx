@@ -59,7 +59,7 @@ Turn.propTypes = {
     name: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
     imageSource: PropTypes.string.isRequired,
-    books: PropTypes.string.isRequired
+    books: PropTypes.arrayOf(PropTypes.string).isRequired
   }),
   books: PropTypes.arrayOf(PropTypes.string).isRequired,
   onAnswerSelected: PropTypes.func.isRequired,
