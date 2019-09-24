@@ -1,5 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {BrowserRouter, Route} from 'react-router-dom'
+
+
 import "./index.css";
 import AuthorQuiz from "./AuthorQuiz";
 import * as serviceWorker from "./serviceWorker";
@@ -65,10 +68,25 @@ const onAnswerSelected = (answer) => {
     render();
 }
 
-const render = () => {ReactDOM.render(<AuthorQuiz {...state} onAnswerSelected={onAnswerSelected}/>, document.getElementById("root"));}
+function App() {
+  return <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected}/>
+}
+
+function AddAuthorForm({match}) {
+  return <>
+    <h1>Add Author</h1>
+    <p>{JSON.stringify(match)}</p>
+  </>;
+}
+
+const render = () => {
+  ReactDOM.render(<BrowserRouter>
+      <Route exact path ='/' component={App}/>
+      <Route path ="/add" component={AddAuthorForm}/>
+    </BrowserRouter>, document.getElementById("root"))}
 
 // If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
+// unregister() to register() below. Note this comes with some psitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 render();
 serviceWorker.unregister();
