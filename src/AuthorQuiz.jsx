@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-import logo from "./logo.svg";
 import "./App.css";
 import "./bootstrap.min.css";
 
@@ -29,6 +29,7 @@ const Book = ({ title, onClick }) => {
 };
 
 const Turn = ({ author, books, highlight, onAnswerSelected }) => {
+  console.log(author);
   const highlightToBgcolor = highlight => {
     const mapping = {
       none: "",
@@ -59,7 +60,7 @@ Turn.propTypes = {
   author: PropTypes.shape({
     name: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
-    imageSource: PropTypes.string.isRequired,
+    // imageSource: PropTypes.string.isRequired,
     books: PropTypes.arrayOf(PropTypes.string).isRequired
   }),
   books: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -95,7 +96,31 @@ const Footer = () => (
   </div>
 );
 
-const AuthorQuiz = ({ turnData, highlight, onAnswerSelected, onContinue }) => (
+function mapStateToProps(state) {
+  return {
+    turnData: state.turnData,
+    highlight: state.highlight
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onAnswerSelected: answer => {
+      dispatch({
+        type: "ANSWER_SELECTED",
+        answer
+      });
+    },
+    onContinue: () => {
+      dispatch({ type: "CONTINUE" });
+    }
+  };
+}
+
+const AuthorQuiz = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ turnData, highlight, onAnswerSelected, onContinue }) => (
   <div className="fluid-container">
     <Hero />
     <Turn
@@ -109,6 +134,6 @@ const AuthorQuiz = ({ turnData, highlight, onAnswerSelected, onContinue }) => (
     </p>
     <Footer />
   </div>
-);
+));
 
 export default AuthorQuiz;
