@@ -67,7 +67,22 @@ Turn.propTypes = {
   highlight: PropTypes.string.isRequired
 };
 
-const Continue = () => <></>;
+const Continue = ({ show, onContinue }) => {
+  return (
+    <div className="row continue">
+      {show ? (
+        <div className="col-11">
+          <button
+            className="btn btn-primary btn-lg float-right"
+            onClick={onContinue}
+          >
+            Continue
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 const Footer = () => (
   <div id="footer" className="row">
@@ -80,7 +95,7 @@ const Footer = () => (
   </div>
 );
 
-const AuthorQuiz = ({ turnData, highlight, onAnswerSelected }) => (
+const AuthorQuiz = ({ turnData, highlight, onAnswerSelected, onContinue }) => (
   <div className="fluid-container">
     <Hero />
     <Turn
@@ -88,7 +103,7 @@ const AuthorQuiz = ({ turnData, highlight, onAnswerSelected }) => (
       highlight={highlight}
       onAnswerSelected={onAnswerSelected}
     />
-    <Continue />
+    <Continue show={highlight === "correct"} onContinue={onContinue} />
     <p>
       <Link to="/add">Add an author</Link>
     </p>

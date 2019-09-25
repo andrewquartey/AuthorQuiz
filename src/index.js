@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {BrowserRouter, Route} from 'react-router-dom'
-
+import {BrowserRouter, Route, withRouter} from 'react-router-dom'
+import {shuffle, sample} from 'lodash'
 
 import "./index.css";
 import AuthorQuiz from "./AuthorQuiz";
+import AddAuthorForm from './AddAuthorForm'
 import * as serviceWorker from "./serviceWorker";
-import {shuffle, sample} from 'lodash'
+
 
 const authors = [{
     name: 'Mark Twain',
@@ -57,10 +58,15 @@ const getTurnData = (authors) => {
     }
 }
 
-const state = {
+
+const resetState = () => {
+  return {
     turnData: getTurnData(authors),
     highlight: '' 
+  }
 }
+
+let state = resetState()
 
 const onAnswerSelected = (answer) => {
     const isCorrect = state.turnData.author.books.some((book)=> book === answer)
@@ -68,21 +74,27 @@ const onAnswerSelected = (answer) => {
     render();
 }
 
-function App() {
-  return <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected}/>
+const onContinue = () => {
+  state = resetState()
+  console.log('cont')
+  render();
 }
 
-function AddAuthorForm({match}) {
-  return <>
-    <h1>Add Author</h1>
-    <p>{JSON.stringify(match)}</p>
-  </>;
+function App() {
+  return <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected} onContinue={onContinue}/>
 }
+
+const addAuthorWrapper = withRouter(({ history }) => {
+  return <AddAuthorForm onAddAuthor={(author) => {
+    authors.push(author)
+    history.push('/')
+  }} />
+})
 
 const render = () => {
   ReactDOM.render(<BrowserRouter>
       <Route exact path ='/' component={App}/>
-      <Route path ="/add" component={AddAuthorForm}/>
+      <Route path ="/add" component={addAuthorWrapper}/>
     </BrowserRouter>, document.getElementById("root"))}
 
 // If you want your app to work offline and load faster, you can change
